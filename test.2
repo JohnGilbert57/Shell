@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# students must NOT change this file in any way!!!
+PATH=/bin:/usr/bin
+TEST=$0
+
+# this is the input lines to use
+cat > $0.input << END
+/bin/echo simple
+/bin/echo 1 2 3
+/bin/echo "this is a single argument"
+/bin/nosuchprog -f doesntmatter
+/bin no such program
+END
+
+# this is the correct output
+# this is the output they should create
+cat > $TEST.correct << END
+simple
+1 2 3
+this is a single argument
+/bin/nosuchprog: No such file or directory
+/bin: Permission denied
+END
+
+# don't change anything else
+export PS1=""; ./bash < $0.input > $TEST.myoutput 2>&1
+if cmp -s $TEST.correct $TEST.myoutput; then
+    echo "PASSES"; exit 0
+else
+    echo "FAILS"; 
+    echo '==== output differences: < means the CORRECT output, > means YOUR output'
+    diff $TEST.correct $TEST.myoutput
+    exit 99
+fi
